@@ -1,4 +1,5 @@
 body {
+  height: 100%;
   background-color: #51504c;
   color: white;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -84,4 +85,44 @@ select {
 
 form {
   text-align: center;
+}
+
+
+
+
+/* Center results on the page */
+.results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 50px); /* Adjust 50px based on your actual navbar height */
+}
+
+.result {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+
+.price-container {
+  text-align: center; /* This will center the content horizontally */
+  padding-top: 5rem; /* Adjust this value to increase/decrease space on top */
+  padding-bottom: 1rem; /* Adjust this value to increase/decrease space at the bottom */
+}
+
+.price-content {
+  padding-bottom: 3rem; /* Adjust this value to increase/decrease space below the MAE before the line */
+}
+
+
+hr {
+  margin: 0 auto; /* This centers the horizontal line */
+  width: 80%; /* Adjusts the width of the line */
+}
+
+
+h2 {
+  margin-top: 3rem; /* Adjust this value to increase/decrease space above the title */
+  margin-bottom: 1rem; /* Adjust this value to increase/decrease space below the title */
 }

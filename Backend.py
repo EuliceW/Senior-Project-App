@@ -166,13 +166,8 @@ def predictor():
             estimated_price = round(estimated_price, 2)
 
             recommended_properties = filtered_properties.sort_values(by='review_scores_value', ascending=False).head(5)
-            
-           
-
-            return render_template('price.html', 
-                       estimated_price=estimated_price, 
-                       mae=round(mae, 2), 
-                       recommended_properties=recommended_properties)
+        
+            return render_template('price.html', estimated_price=estimated_price, mae=round(mae, 2), recommended_properties=recommended_properties)
 
         except Exception as e:
             print(f"Error during prediction: {str(e)}")

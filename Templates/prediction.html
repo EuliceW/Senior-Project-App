@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Allows for the styling of the wed page -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Styles/style.css') }}">
+    <!-- Allows for the styling of the web page -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     
-    <title>Airbnb Price Predictor</title>
-    
+    <title>Predictor</title>
 </head>
+
 <body>
     <!-- The tool bar on the web app -->
     <div class="topnav">
@@ -18,64 +18,38 @@
         <a href="{{ url_for('about') }}">About</a>
     </div>
 
-    <h1>Airbnb Price Predictor</h1>
-    <h4>Please enter the corresponding data below.</h4>
-
-    <div class="row">
-        <form id="prediction-form" method="POST" action="{{ url_for('predictor') }}">
+    <form method="POST" action="{{ url_for('predictor') }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
             <div class="column">
-
-                    {{ form.accommodates.label() }}<br>{{ form.accommodates() }}<br>
-
-                    {{ form.bathrooms.label() }}<br>{{ form.bathrooms() }}<br>
-
-                    {{ form.neighbourhood_cleansed_num.label() }}<br>{{ form.neighbourhood_cleansed_num() }}<br>
-
-                    {{ form.nights_staying.label() }}<br>{{ form.nights_staying() }}<br>
-
-                    {{ form.bedrooms.label() }}<br>{{ form.bedrooms() }}<br>
+                {{ form.accommodates.label }}<br>{{ form.accommodates(class="input-field") }}
+                {{ form.bathrooms.label }}<br>{{ form.bathrooms(class="input-field") }}
+                {{ form.nights_staying.label }}<br>{{ form.nights_staying(class="input-field") }}
+                {{ form.bedrooms.label }}<br>{{ form.bedrooms(class="input-field") }}
+                {{ form.fireplace.label }}<br>{{ form.fireplace() }}
+                {{ form.hot_tub.label }}<br>{{ form.hot_tub() }}
             </div>
-            
+
             <div class="column">
-
-                    {{ form.fireplace.label() }}<br>{{ form.fireplace() }}<br>
-                    
-                    {{ form.hot_tub.label() }}<br>{{ form.hot_tub() }}<br>
-
-                    {{ form.cable.label() }}<br>{{ form.cable() }}<br>
-
-                    {{ form.review_scores_value.label() }}<br>{{ form.review_scores_value() }}<br>
-
-                    {{ form.property_type.label() }}<br>{{ form.property_type() }}<br>
-
-                    {{ form.room_type_num.label() }}<br>{{ form.room_type_num() }}<br>
+                {{ form.cable.label }}<br>{{ form.cable() }}
+                {{ form.wifi.label }}<br>{{ form.wifi() }}
+                {{ form.review_scores_value.label }}<br>{{ form.review_scores_value(class="input-field") }}
+                {{ form.property_type.label }}<br>{{ form.property_type(class="input-field") }}
+                {{ form.room_type_num.label }}<br>{{ form.room_type_num(class="input-field") }}
+                {{ form.room_type_num.label }}<br>{{ form.room_type_num(class="input-field") }}
             </div>
-            
-            {{ form.submit() }}
-        </form>
-    </div>
+        </div>
 
-    <script>
-        document.getElementById('prediction-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-    
-            var formData = new FormData(this);
-    
-            fetch('/predictor', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })        
-            .then(response => response.text())
-            .then(data => {
-                if (data) {
-                    console.log('Predicted Price: $' + data);
-                    alert('Predicted Price: $' + data);
-                }
-            });
-        });
-    </script>
+        {{ form.submit(class="submit-button") }}
+    </form>
+
+    {% if estimated_price %}
+        <div class="results-container">
+            <div class="result">
+                Predicted Price: ${{ estimated_price }}
+            </div>
+        </div>
+    {% endif %}
 </body>
+
 </html>
