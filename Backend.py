@@ -12,7 +12,7 @@ from sklearn.exceptions import DataConversionWarning
 from sklearn.model_selection import train_test_split
 warnings.filterwarnings(action='ignore', category=UserWarning, module='sklearn')
 
-app = Flask(__name__, static_folder='Statics')
+app = Flask(__name__, static_folder='Static')
 app.config['SECRET_KEY'] = 'wdazD1dRmBGVwVSi'
 
 
@@ -69,6 +69,7 @@ class PredictionForm(FlaskForm):
     submit = SubmitField('Predict Price')
     
 # Route to the Prediction Model Page
+@app.route('/')
 @app.route('/predictor', methods=['GET', 'POST'])
 def predictor():
     form = PredictionForm()
@@ -174,14 +175,11 @@ def predictor():
 
     return render_template('prediction.html', title='Prediction Model', form=form, estimated_price=estimated_price)
 
-
-
 @app.route('/price')
 def price():
     estimated_price = request.args.get('estimated_price', 'N/A')
     mae = request.args.get('mae', 'N/A')
     return render_template('price.html', estimated_price=estimated_price, mae=mae)
-
 
 # Route to the About Page
 @app.route('/about')

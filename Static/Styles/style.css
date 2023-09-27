@@ -87,9 +87,6 @@ form {
   text-align: center;
 }
 
-
-
-
 /* Center results on the page */
 .results-container {
   display: flex;
@@ -103,7 +100,6 @@ form {
   font-size: 24px;
   margin-bottom: 20px;
 }
-
 
 .price-container {
   text-align: center; /* This will center the content horizontally */

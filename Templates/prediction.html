@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Allows for the styling of the web page -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Styles/style.css') }}">
     
     <title>Predictor</title>
 </head>
@@ -18,25 +18,26 @@
         <a href="{{ url_for('about') }}">About</a>
     </div>
 
+    <h1>Price Prediction</h1>
+
     <form method="POST" action="{{ url_for('predictor') }}">
         {{ form.hidden_tag() }}
         <div class="row">
             <div class="column">
-                {{ form.accommodates.label }}<br>{{ form.accommodates(class="input-field") }}
-                {{ form.bathrooms.label }}<br>{{ form.bathrooms(class="input-field") }}
-                {{ form.nights_staying.label }}<br>{{ form.nights_staying(class="input-field") }}
-                {{ form.bedrooms.label }}<br>{{ form.bedrooms(class="input-field") }}
-                {{ form.fireplace.label }}<br>{{ form.fireplace() }}
-                {{ form.hot_tub.label }}<br>{{ form.hot_tub() }}
+                {{ form.accommodates.label }}<br>{{ form.accommodates(class="input-field") }}<br>
+                {{ form.bathrooms.label }}<br>{{ form.bathrooms(class="input-field") }}<br>
+                {{ form.nights_staying.label }}<br>{{ form.nights_staying(class="input-field") }}<br>
+                {{ form.bedrooms.label }}<br>{{ form.bedrooms(class="input-field") }}<br>
+                {{ form.fireplace.label }}<br>{{ form.fireplace() }}<br>
+                {{ form.hot_tub.label }}<br>{{ form.hot_tub() }}<br>
             </div>
 
             <div class="column">
-                {{ form.cable.label }}<br>{{ form.cable() }}
-                {{ form.wifi.label }}<br>{{ form.wifi() }}
-                {{ form.review_scores_value.label }}<br>{{ form.review_scores_value(class="input-field") }}
-                {{ form.property_type.label }}<br>{{ form.property_type(class="input-field") }}
-                {{ form.room_type_num.label }}<br>{{ form.room_type_num(class="input-field") }}
-                {{ form.room_type_num.label }}<br>{{ form.room_type_num(class="input-field") }}
+                {{ form.cable.label }}<br>{{ form.cable() }}<br>
+                {{ form.wifi.label }}<br>{{ form.wifi() }}<br>
+                {{ form.review_scores_value.label }}<br>{{ form.review_scores_value(class="input-field") }}<br>
+                {{ form.property_type.label }}<br>{{ form.property_type(class="input-field") }}<br>
+                {{ form.room_type_num.label }}<br>{{ form.room_type_num(class="input-field") }}<br>
             </div>
         </div>
 
