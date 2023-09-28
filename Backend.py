@@ -15,10 +15,6 @@ warnings.filterwarnings(action='ignore', category=UserWarning, module='sklearn')
 app = Flask(__name__, static_folder='Static')
 app.config['SECRET_KEY'] = 'wdazD1dRmBGVwVSi'
 
-
-
-
-
 # Load or train the model
 try:
     trained_model = load('trained_model.joblib')
@@ -46,12 +42,25 @@ class PredictionForm(FlaskForm):
     accommodates = FloatField('How many people do you want to stay?', validators=[DataRequired()])
     bathrooms = FloatField('Enter the number of bathrooms (e.g. 1.5)', validators=[DataRequired()])
     nights_staying = FloatField('How many nights are you staying?', validators=[DataRequired()])
+    grill = BooleanField('Do you want a grill?')
     bedrooms = FloatField('Enter the number of bedrooms', validators=[DataRequired()])
     fireplace = BooleanField('Do you want a fireplace?')
     hot_tub = BooleanField('Do you want a hot tub?')
-    cable = BooleanField('Do you want cable TV?')
-    wifi = BooleanField('Do you want WiFi?') # Added WiFi field
+    private_entrance = BooleanField('Do you want a private entrance?')
+    free_parking = BooleanField('Do you want free parking?')
     review_scores_value = FloatField('Enter desired review score (1-5 or percentage)', validators=[DataRequired()])
+    review_scores_location = FloatField('Enter desired location review score (1-5 or percentage)', validators=[DataRequired()])
+    resort_access = BooleanField('Do you want resort access?')
+    beds = FloatField('Enter number of beds', validators=[DataRequired()])
+    pool = BooleanField('Do you want a pool?')
+    host_acceptance_rate = FloatField('Enter desired host acceptance rate (0-100)', validators=[DataRequired()])
+    neighborhood_cleansed_num = SelectField('Choose Neighborhood (Chart below)', choices=[
+        (1, 'District 1'), (2, 'District 2'), (3, 'District 3'), (4, 'District 4'), (5, 'District 5'), (6, 'District 6'), (7, 'District 7'), (8, 'District 8'), 
+        (9, 'District 9'), (10, 'District 10'), (11, 'District 11'), (12, 'District 12'), (13, 'District 13'), (14, 'District 14'), (15, 'District 15'), (16, 'District 16'), 
+        (17, 'District 17'), (18, 'District 18'), (19, 'District 19'), (20, 'District 20'), (21, 'District 21'), (22, 'District 22'), (23, 'District 23'), (24, 'District 24'), 
+        (25, 'District 25'), (26, 'District 26'), (27, 'District 27'), (28, 'District 28'), (29, 'District 29'), (30, 'District 30'), (31, 'District 31'), (32, 'District 32'), 
+        (33, 'District 33'), (34, 'District 34'), (35, 'District 35')
+    ])
     property_type = SelectField('Choose Property Type', choices=[
         ('prop_Entire condo', 'Entire Condo'),
         ('prop_Entire guest suite', 'Entire Guest Suite'),
@@ -138,8 +147,20 @@ def predictor():
         # 4. Bedrooms
         filtered_properties = filtered_properties[filtered_properties['bedrooms'] >= user_data['bedrooms']]
 
+        # Ensuring the amenities correctly encoded
+        if 'grill' in user_data:
+            user_data['grill'] = user_data.pop('grill')
+        if 'private_entrance' in user_data:
+            user_data['private entrance'] = user_data.pop('private_entrance')
+        if 'free_parking' in user_data:
+            user_data['free parking'] = user_data.pop('free_parking')
+        if 'resort_access' in user_data:
+            user_data['resort access'] = user_data.pop('resort_access')
+        if 'pool' in user_data:
+            user_data['pool'] = user_data.pop('pool')
+
         # 5. Amenities
-        amenities = ['fireplace', 'hot tub', 'cable', 'wifi']
+        amenities = ['fireplace', 'hot tub', 'grill', 'private entrance', 'free parking', 'resort access', 'pool']
         for amenity in amenities:
             if user_data[amenity]:
                 filtered_properties = filtered_properties[filtered_properties[amenity] == 1]
@@ -159,6 +180,27 @@ def predictor():
         elif selected_room_type == 'Private Room':
             filtered_properties = filtered_properties[filtered_properties['room_Private room'] == 1]
 
+        # 9. Location Review Scores
+        min_review_score_location = user_data['review_scores_location'] - 1
+        filtered_properties = filtered_properties[filtered_properties['review_scores_location'] > min_review_score_location]
+
+        # 10. Beds
+        filtered_properties = filtered_properties[filtered_properties['beds'] >= user_data['beds']]
+
+        # Neighborhood Cleansed
+        neighborhood = [
+            'District 1', 'District 2', 'District 3', 'District 4', 'District 5', 'District 6', 'District 7', 'District 8', 
+            'District 9', 'District 10', 'District 11', 'District 12', 'District 13', 'District 14', 'District 15', 'District 16', 
+            'District 17', 'District 18', 'District 19', 'District 20', 'District 21', 'District 22', 'District 23', 'District 24', 
+            'District 25', 'District 26', 'District 27', 'District 28', 'District 29', 'District 30', 'District 31', 'District 32', 
+            'District 33', 'District 34', 'District 35'
+        ]
+        selected_neighborhood = user_data.pop('neighborhood_cleansed_num')
+        for neighborhood_num in neighborhood:
+            user_data[neighborhood_num] = 1 if neighborhood_num == selected_neighborhood else 0
+
+        # Host Acceptance Rate
+        filtered_properties = filtered_properties[filtered_properties['host_acceptance_rate'] >= user_data['host_acceptance_rate']]
 
 
         # Predict the price using the trained model
