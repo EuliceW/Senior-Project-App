@@ -49,13 +49,12 @@ class PredictionForm(FlaskForm):
     private_entrance = BooleanField('Do you want a private entrance?')
     free_parking = BooleanField('Do you want free parking?')
     review_scores_rating = FloatField('Enter desired review score (1-5 or percentage)', validators=[DataRequired()])
-    print(f'This is the review score: {review_scores_rating}')
     review_scores_location = FloatField('Enter desired location review score (1-5 or percentage)', validators=[DataRequired()])
     resort_access = BooleanField('Do you want resort access?')
     beds = FloatField('Enter number of beds', validators=[DataRequired()])
     pool = BooleanField('Do you want a pool?')
     host_acceptance_rate = FloatField('Enter desired host acceptance rate (0-100)', validators=[DataRequired()])
-    neighborhood_cleansed_num = SelectField('Choose Neighborhood (Chart below)', choices=[
+    neighbourhood_cleansed_num = SelectField('Choose Neighbourhood (Chart below)', choices=[
         (1, 'District 1'), (2, 'District 2'), (3, 'District 3'), (4, 'District 4'), (5, 'District 5'), (6, 'District 6'), (7, 'District 7'), (8, 'District 8'), 
         (9, 'District 9'), (10, 'District 10'), (11, 'District 11'), (12, 'District 12'), (13, 'District 13'), (14, 'District 14'), (15, 'District 15'), (16, 'District 16'), 
         (17, 'District 17'), (18, 'District 18'), (19, 'District 19'), (20, 'District 20'), (21, 'District 21'), (22, 'District 22'), (23, 'District 23'), (24, 'District 24'), 
@@ -72,10 +71,12 @@ class PredictionForm(FlaskForm):
         ('prop_Hotel', 'Hotel'),
         ('prop_Private room', 'Private Room')
     ])
-    room_type_num = SelectField('Choose Room Type', choices=[
-        (1, 'Entire home/apt'),
-        (2, 'Private Room')
-    ])
+    room_type = SelectField('Choose Room Type', choices=[
+    ('room_Entire home/apt', 'Entire home/apt'),
+    ('room_Private room', 'Private Room')
+])
+
+
     submit = SubmitField('Predict Price')
     
 # Route to the Prediction Model Page
@@ -175,12 +176,14 @@ def predictor():
         # The filtering for property type is inherently done through the one-hot encoding process
 
         # 8. Room type
-        room_type_mapping = {1: 'Entire home/apt', 2: 'Private Room'}
-        selected_room_type = room_type_mapping[int(user_data['room_type_num'])]
-        if selected_room_type == 'Entire home/apt':
-            filtered_properties = filtered_properties[filtered_properties['room_Entire home/apt'] == 1]
-        elif selected_room_type == 'Private Room':
-            filtered_properties = filtered_properties[filtered_properties['room_Private room'] == 1]
+        # Handle one-hot encoding for room_type
+        room_types = {
+            'room_Entire home/apt': 'Entire home/apt',
+            'room_Private room': 'Private Room'
+        }
+        selected_room_type = user_data.pop('room_type')
+        for encoded_name, original_name in room_types.items():
+            user_data[encoded_name] = 1 if original_name == selected_room_type else 0
 
         # 9. Location Review Scores
         min_review_score_location = user_data['review_scores_location'] - 1
@@ -189,17 +192,17 @@ def predictor():
         # 10. Beds
         filtered_properties = filtered_properties[filtered_properties['beds'] >= user_data['beds']]
 
-        # Neighborhood Cleansed
-        neighborhood = [
+        # Neighbourhood Cleansed
+        neighbourhood = [
             'District 1', 'District 2', 'District 3', 'District 4', 'District 5', 'District 6', 'District 7', 'District 8', 
             'District 9', 'District 10', 'District 11', 'District 12', 'District 13', 'District 14', 'District 15', 'District 16', 
             'District 17', 'District 18', 'District 19', 'District 20', 'District 21', 'District 22', 'District 23', 'District 24', 
             'District 25', 'District 26', 'District 27', 'District 28', 'District 29', 'District 30', 'District 31', 'District 32', 
             'District 33', 'District 34', 'District 35'
         ]
-        selected_neighborhood = user_data.pop('neighborhood_cleansed_num')
-        for neighborhood_num in neighborhood:
-            user_data[neighborhood_num] = 1 if neighborhood_num == selected_neighborhood else 0
+        selected_neighbuorhood = user_data.pop('neighbourhood_cleansed_num')
+        for neighbourhood_num in neighbourhood:
+            user_data[neighbourhood_num] = 1 if neighbourhood_num == selected_neighbuorhood else 0
 
         # Host Acceptance Rate
         filtered_properties = filtered_properties[filtered_properties['host_acceptance_rate'] >= user_data['host_acceptance_rate']]
@@ -216,10 +219,12 @@ def predictor():
 
         # Predict the price using the trained model
         try:
-            estimated_price = trained_model.predict([list(prepared_data.values())])[0]
+            ordered_data_values = [prepared_data[feature] for feature in X.columns]
+
+            estimated_price = trained_model.predict([ordered_data_values])[0]
             estimated_price = round(estimated_price, 2)
 
-            recommended_properties = filtered_properties.sort_values(by='review_scores_value', ascending=False).head(5)
+            recommended_properties = filtered_properties.sort_values(by='review_scores_rating', ascending=False).head(5)
         
             return render_template('price.html', estimated_price=estimated_price, mae=round(mae, 2), recommended_properties=recommended_properties)
 
