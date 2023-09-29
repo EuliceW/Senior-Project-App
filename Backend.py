@@ -48,7 +48,8 @@ class PredictionForm(FlaskForm):
     hot_tub = BooleanField('Do you want a hot tub?')
     private_entrance = BooleanField('Do you want a private entrance?')
     free_parking = BooleanField('Do you want free parking?')
-    review_scores_value = FloatField('Enter desired review score (1-5 or percentage)', validators=[DataRequired()])
+    review_scores_rating = FloatField('Enter desired review score (1-5 or percentage)', validators=[DataRequired()])
+    print(f'This is the review score: {review_scores_rating}')
     review_scores_location = FloatField('Enter desired location review score (1-5 or percentage)', validators=[DataRequired()])
     resort_access = BooleanField('Do you want resort access?')
     beds = FloatField('Enter number of beds', validators=[DataRequired()])
@@ -109,6 +110,16 @@ def predictor():
         # Ensure hot tub is correctly encoded
         if 'hot_tub' in user_data:
             user_data['hot tub'] = user_data.pop('hot_tub')
+        if 'grill' in user_data:
+            user_data['grill'] = user_data.pop('grill')
+        if 'private_entrance' in user_data:
+            user_data['private entrance'] = user_data.pop('private_entrance')
+        if 'free_parking' in user_data:
+            user_data['free parking'] = user_data.pop('free_parking')
+        if 'resort_access' in user_data:
+            user_data['resort access'] = user_data.pop('resort_access')
+        if 'pool' in user_data:
+            user_data['pool'] = user_data.pop('pool')
 
         # Populate missing features with their average values
         prepared_data = mean_features.copy()
@@ -137,7 +148,7 @@ def predictor():
         nights_staying_value = form.data['nights_staying']
         filtered_properties = filtered_properties[
             (filtered_properties['minimum_minimum_nights'] <= nights_staying_value) &
-            (filtered_properties['maximum_maximum_nights'] >= nights_staying_value)
+            (filtered_properties['minimum_maximum_nights'] >= nights_staying_value)
         ]
 
         # Now, drop the key from the dictionary since it's not needed anymore
@@ -148,16 +159,7 @@ def predictor():
         filtered_properties = filtered_properties[filtered_properties['bedrooms'] >= user_data['bedrooms']]
 
         # Ensuring the amenities correctly encoded
-        if 'grill' in user_data:
-            user_data['grill'] = user_data.pop('grill')
-        if 'private_entrance' in user_data:
-            user_data['private entrance'] = user_data.pop('private_entrance')
-        if 'free_parking' in user_data:
-            user_data['free parking'] = user_data.pop('free_parking')
-        if 'resort_access' in user_data:
-            user_data['resort access'] = user_data.pop('resort_access')
-        if 'pool' in user_data:
-            user_data['pool'] = user_data.pop('pool')
+        
 
         # 5. Amenities
         amenities = ['fireplace', 'hot tub', 'grill', 'private entrance', 'free parking', 'resort access', 'pool']
@@ -166,8 +168,8 @@ def predictor():
                 filtered_properties = filtered_properties[filtered_properties[amenity] == 1]
 
         # 6. Review scores
-        min_review_score = user_data['review_scores_value'] - 1
-        filtered_properties = filtered_properties[filtered_properties['review_scores_value'] > min_review_score]
+        min_review_score = user_data['review_scores_rating'] - 1
+        filtered_properties = filtered_properties[filtered_properties['review_scores_rating'] > min_review_score]
 
         # 7. Property type
         # The filtering for property type is inherently done through the one-hot encoding process
@@ -202,6 +204,15 @@ def predictor():
         # Host Acceptance Rate
         filtered_properties = filtered_properties[filtered_properties['host_acceptance_rate'] >= user_data['host_acceptance_rate']]
 
+        # Compare features between model and user data
+        model_features = set(X.columns)
+        prepared_features = set(prepared_data.keys())
+
+        missing_features = model_features - prepared_features
+        extra_features = prepared_features - model_features
+
+        print("Missing features:", missing_features)
+        print("Extra features:", extra_features)
 
         # Predict the price using the trained model
         try:
