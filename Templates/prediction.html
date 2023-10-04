@@ -47,8 +47,11 @@
                 {{ form.neighbourhood_cleansed_num.label }}<br>{{ form.neighbourhood_cleansed_num(class="input-field") }}<br>
             </div>
         </div>
+        {{ form.submit(class="submit-button") }}<br>
 
-        {{ form.submit(class="submit-button") }}
+        <center>
+            <img src="https://filetransfer.nashville.gov/portals/0/sitecontent/Planning/images/FrontPage/DistrictsAndCommunities600.jpg" alt="Nashville District Map">
+        </center>
     </form>
 
     {% if estimated_price %}

@@ -37,7 +37,7 @@ y_pred = trained_model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 
 
-
+# Prediction Page Forms
 class PredictionForm(FlaskForm):
     accommodates = FloatField('How many people do you want to stay?', validators=[DataRequired()])
     bathrooms = FloatField('Enter the number of bathrooms (e.g. 1.5)', validators=[DataRequired()])
@@ -87,6 +87,7 @@ def predictor():
     estimated_price = None
 
     if form.validate_on_submit():
+        # Creates the user_data dictionary (extends form.data)
         user_data = {key: value for key, value in form.data.items() if key != 'nights_staying' and key != 'csrf_token'}
 
         # Convert specific fields to appropriate values
@@ -108,7 +109,7 @@ def predictor():
         for prop_type in property_types:
             user_data[prop_type] = 1 if prop_type == selected_property_type else 0
 
-        # Ensure hot tub is correctly encoded
+        # Ensure the Amenities are correctly encoded
         if 'hot_tub' in user_data:
             user_data['hot tub'] = user_data.pop('hot_tub')
         if 'grill' in user_data:
@@ -138,7 +139,7 @@ def predictor():
         # Start with the entire dataset and filter it step by step
         filtered_properties = nashvilleDF.copy()
 
-        # 1. Accommodates
+        # 1. Accommodates``
         filtered_properties = filtered_properties[filtered_properties['accommodates'] >= user_data['accommodates']]
 
         # 2. Bathrooms
