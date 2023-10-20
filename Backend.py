@@ -240,10 +240,6 @@ def price():
     mae = request.args.get('mae', 'N/A')
     return render_template('price.html', estimated_price=estimated_price, mae=mae)
 
-# Route to the About Page
-@app.route('/about')
-def about():
-    return render_template('about.html', title='About Page')
 
 if __name__ == '__main__':
     app.run(debug=True)
