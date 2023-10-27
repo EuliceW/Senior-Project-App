@@ -24,13 +24,69 @@
         <div class="row">
             <div class="column">
                 {{ form.accommodates.label }}<br>{{ form.accommodates(class="input-field") }}<br>
+                {% if form.accommodates.errors %}
+                    <div class="error">
+                    {% for error in form.accommodates.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 {{ form.bathrooms.label }}<br>{{ form.bathrooms(class="input-field") }}<br>
+                {% if form.bathrooms.errors %}
+                    <div class="error">
+                    {% for error in form.bathrooms.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 {{ form.nights_staying.label }}<br>{{ form.nights_staying(class="input-field") }}<br>
+                {% if form.nights_staying.errors %}
+                    <div class="error">
+                    {% for error in form.nights_staying.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 {{ form.bedrooms.label }}<br>{{ form.bedrooms(class="input-field") }}<br>
+                {% if form.bedrooms.errors %}
+                    <div class="error">
+                    {% for error in form.bedrooms.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 {{ form.beds.label }}<br>{{ form.beds(class="input-field") }}<br>
+                {% if form.beds.errors %}
+                    <div class="error">
+                    {% for error in form.beds.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 {{ form.review_scores_rating.label }}<br>{{ form.review_scores_rating(class="input-field") }}<br>
+                {% if form.review_scores_rating.errors %}
+                    <div class="error">
+                    {% for error in form.review_scores_rating.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 {{ form.review_scores_location.label }}<br>{{ form.review_scores_location(class="input-field") }}<br>
+                {% if form.review_scores_location.errors %}
+                    <div class="error">
+                    {% for error in form.review_scores_location.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 {{ form.host_acceptance_rate.label }}<br>{{ form.host_acceptance_rate(class="input-field") }}<br>
+                {% if form.host_acceptance_rate.errors %}
+                    <div class="error">
+                    {% for error in form.host_acceptance_rate.errors %}
+                        <p>Invalid character. Please enter number.</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="column">

@@ -28,6 +28,10 @@ button {
   font-size: 12px;
 }
 
+.error {
+  color: yellow;
+}
+
 /* Adds style to the drop down menus */
 select {
   appearance: none;

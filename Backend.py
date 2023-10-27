@@ -1,14 +1,12 @@
 import pandas as pd
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, request
 from flask_wtf import FlaskForm
-from flask import jsonify
-from wtforms import FloatField, SubmitField, BooleanField, IntegerField, SelectField
-from wtforms.validators import DataRequired
+from wtforms import FloatField, SubmitField, BooleanField, SelectField
+from wtforms.validators import DataRequired, InputRequired, NumberRange
 from joblib import dump, load
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error
 import warnings
-from sklearn.exceptions import DataConversionWarning
 from sklearn.model_selection import train_test_split
 warnings.filterwarnings(action='ignore', category=UserWarning, module='sklearn')
 
@@ -39,21 +37,21 @@ mae = mean_absolute_error(y_test, y_pred)
 
 # Prediction Page Forms
 class PredictionForm(FlaskForm):
-    accommodates = FloatField('How many people do you want to stay?', validators=[DataRequired()])
-    bathrooms = FloatField('Enter the number of bathrooms (e.g. 1.5)', validators=[DataRequired()])
-    nights_staying = FloatField('How many nights are you staying?', validators=[DataRequired()])
+    accommodates = FloatField('How many people do you want to stay?', validators=[DataRequired(), NumberRange(min=1)])
+    bathrooms = FloatField('Enter the number of bathrooms (e.g. 1.5)', validators=[DataRequired(), NumberRange(min=0)])
+    nights_staying = FloatField('How many nights are you staying?', validators=[DataRequired(), NumberRange(min=1)])
     grill = BooleanField('Do you want a grill?')
-    bedrooms = FloatField('Enter the number of bedrooms', validators=[DataRequired()])
+    bedrooms = FloatField('Enter the number of bedrooms', validators=[DataRequired(), NumberRange(min=0)])
     fireplace = BooleanField('Do you want a fireplace?')
     hot_tub = BooleanField('Do you want a hot tub?')
     private_entrance = BooleanField('Do you want a private entrance?')
     free_parking = BooleanField('Do you want free parking?')
-    review_scores_rating = FloatField('Enter desired review score (1-5 or percentage)', validators=[DataRequired()])
-    review_scores_location = FloatField('Enter desired location review score (1-5 or percentage)', validators=[DataRequired()])
+    review_scores_rating = FloatField('Enter desired review score (1-5 or percentage)', validators=[DataRequired(), NumberRange(min=0, max=100)])
+    review_scores_location = FloatField('Enter desired location review score (1-5 or percentage)', validators=[DataRequired(), NumberRange(min=0, max=100)])
     resort_access = BooleanField('Do you want resort access?')
-    beds = FloatField('Enter number of beds', validators=[DataRequired()])
+    beds = FloatField('Enter number of beds', validators=[DataRequired(), NumberRange(min=1)])
     pool = BooleanField('Do you want a pool?')
-    host_acceptance_rate = FloatField('Enter desired host acceptance rate (0-100)', validators=[DataRequired()])
+    host_acceptance_rate = FloatField('Enter desired host acceptance rate (0-100)', validators=[DataRequired(), NumberRange(min=0, max=100)])
     neighbourhood_cleansed_num = SelectField('Choose Neighbourhood (Chart below)', choices=[
         (1, 'District 1'), (2, 'District 2'), (3, 'District 3'), (4, 'District 4'), (5, 'District 5'), (6, 'District 6'), (7, 'District 7'), (8, 'District 8'), 
         (9, 'District 9'), (10, 'District 10'), (11, 'District 11'), (12, 'District 12'), (13, 'District 13'), (14, 'District 14'), (15, 'District 15'), (16, 'District 16'), 
