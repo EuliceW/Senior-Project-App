@@ -1,7 +1,7 @@
 body {
   height: 100%;
-  background-color: #51504c;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
@@ -28,14 +28,15 @@ button {
   font-size: 12px;
 }
 
+/* The error statement will show as Red */
 .error {
-  color: yellow;
+  color: red;
 }
 
 /* Adds style to the drop down menus */
 select {
   appearance: none;
-  background-color: #51504c;
+  background-color: rgba(128, 128, 128, 0.281);
   border: 2px solid black;
   border-radius: 4px;
   outline: black;
@@ -44,7 +45,7 @@ select {
   width: 50%;
   font-family: inherit;
   font-size: inherit;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 /* Add a black background color to the top navigation */
@@ -57,7 +58,7 @@ select {
 /* Style the links inside the navigation bar */
 .topnav a {
   float: left;
-  color: #f2f2f2;
+  color: #000000;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
