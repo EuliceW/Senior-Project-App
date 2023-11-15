@@ -21,8 +21,8 @@
 
     <form method="POST" action="{{ url_for('predictor') }}">
         {{ form.hidden_tag() }}
-        <div class="row">
-            <div class="column">
+        <table>
+            <th>
                 {{ form.accommodates.label }}<br>{{ form.accommodates(class="input-field") }}<br>
                 {% if form.accommodates.errors %}
                     <div class="error">
@@ -55,6 +55,10 @@
                     {% endfor %}
                     </div>
                 {% endif %}
+                {{ form.property_type.label }}<br>{{ form.property_type(class="input-field") }}<br>
+            </th>
+
+            <th>
                 {{ form.beds.label }}<br>{{ form.beds(class="input-field") }}<br>
                 {% if form.beds.errors %}
                     <div class="error">
@@ -87,9 +91,10 @@
                     {% endfor %}
                     </div>
                 {% endif %}
-            </div>
+                {{ form.room_type.label }}<br>{{ form.room_type(class="input-field") }}<br>
+            </th>
 
-            <div class="column">
+            <th>
                 {{ form.fireplace.label }}<br>{{ form.fireplace() }}<br>
                 {{ form.hot_tub.label }}<br>{{ form.hot_tub() }}<br>
                 {{ form.grill.label }}<br>{{ form.grill() }}<br>
@@ -97,11 +102,9 @@
                 {{ form.private_entrance.label }}<br>{{ form.private_entrance() }}<br>
                 {{ form.free_parking.label }}<br>{{ form.free_parking() }}<br>
                 {{ form.resort_access.label }}<br>{{ form.resort_access() }}<br>
-                {{ form.property_type.label }}<br>{{ form.property_type(class="input-field") }}<br>
-                {{ form.room_type.label }}<br>{{ form.room_type(class="input-field") }}<br>
                 {{ form.neighbourhood_cleansed_num.label }}<br>{{ form.neighbourhood_cleansed_num(class="input-field") }}<br>
-            </div>
-        </div>
+            </th>
+        </table>
         {{ form.submit(class="submit-button") }}<br>
 
         <center>
